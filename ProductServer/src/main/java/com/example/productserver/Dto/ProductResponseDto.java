@@ -7,6 +7,7 @@ import java.util.Date;
 
 @Builder
 public class ProductResponseDto {
+    private Long productId;
     private String userName; //트레이너 이름
     private String largeCategory; //대분류
     private String smallCategory; //소분류
@@ -23,6 +24,7 @@ public class ProductResponseDto {
 
     public static ProductResponseDto entityToDto(ProductEntity productEntity, String username) {
         return ProductResponseDto.builder().
+                productId(productEntity.getId()).
                 userName(username).
                 largeCategory(productEntity.getCategoryEntity().getLargeCategory()).
                 smallCategory(productEntity.getCategoryEntity().getSmallCategory()).

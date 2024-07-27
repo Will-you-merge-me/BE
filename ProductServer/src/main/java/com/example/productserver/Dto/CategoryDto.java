@@ -2,8 +2,10 @@ package com.example.productserver.Dto;
 
 import com.example.productserver.Entity.CategoryEntity;
 import lombok.Builder;
+import lombok.Getter;
 
 @Builder
+@Getter
 public class CategoryDto {
     private Long id;
     private String largeCategory;

@@ -3,11 +3,13 @@ package com.example.productserver.Dto;
 import com.example.productserver.Entity.CategoryEntity;
 import com.example.productserver.Entity.ProductEntity;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.util.Date;
 
 //상품을 등록하기 위한 DTO
 @Builder
+@Getter
 public class ProductDto {
     private Long userId;
     private Long categoryId;
@@ -35,5 +37,20 @@ public class ProductDto {
                 endTime(productDto.endTime).
                 closeDay(productDto.closeDay).
                 build();
+    }
+
+    public static ProductDto entityToDto(ProductEntity productEntity) {
+        return ProductDto.builder()
+                .userId(productEntity.getUserId())
+                .categoryId(productEntity.getCategoryEntity().getId())
+                .title(productEntity.getTitle())
+                .description(productEntity.getDescription())
+                .location(productEntity.getLocation())
+                .image(productEntity.getImage())
+                .like(productEntity.getLike())
+                .startTime(productEntity.getStartTime())
+                .endTime(productEntity.getEndTime())
+                .closeDay(productEntity.getCloseDay())
+                .build();
     }
 }
