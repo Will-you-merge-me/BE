@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController("/product")
 public class ProductController {
 
@@ -25,6 +27,18 @@ public class ProductController {
     public ResponseEntity<ProductDto> readProduct(@PathVariable Long productId) {
         ProductDto read = productService.readProduct(productId);
         return ResponseEntity.ok().body(read);
+    }
+
+    @GetMapping("/large/category") //대분류 카테고리별 상품 전체보기
+    public ResponseEntity<List<ProductDto>> readAllByLargeCategory(@RequestParam("largeCategory") String largeCategory) {
+        List<ProductDto> productDtoList = productService.readAllByLargeCategory(largeCategory);
+        return ResponseEntity.ok().body(productDtoList);
+    }
+
+    @GetMapping("/small/category") //소분류 카테고리별 상품 전체보기
+    public ResponseEntity<List<ProductDto>> readAllBySmallCategory(@RequestParam("smallCategory") String smallCategory) {
+        List<ProductDto> productDtoList = productService.readAllBySmallCategory(smallCategory);
+        return ResponseEntity.ok().body(productDtoList);
     }
 
     @PatchMapping("/update") //상품 수정

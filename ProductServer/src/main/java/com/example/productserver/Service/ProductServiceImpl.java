@@ -5,6 +5,8 @@ import com.example.productserver.Dto.ProductDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProductServiceImpl implements ProductService{
 
@@ -23,6 +25,16 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public ProductDto readProduct(Long productId) {
         return null;
+    }
+
+    @Override
+    public List<ProductDto> readAllByLargeCategory(String largeCategory) {
+        return List.of();
+    }
+
+    @Override
+    public List<ProductDto> readAllBySmallCategory(String smallCategory) {
+        return List.of();
     }
 
     @Override

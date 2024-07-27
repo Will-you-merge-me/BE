@@ -1,7 +1,13 @@
 package com.example.productserver.Dto;
 
+import com.example.productserver.Entity.CategoryEntity;
+import com.example.productserver.Entity.ProductEntity;
+import lombok.Builder;
+
 import java.util.Date;
 
+//상품을 등록하기 위한 DTO
+@Builder
 public class ProductDto {
     private Long userId;
     private Long categoryId;
@@ -15,4 +21,19 @@ public class ProductDto {
     private Date startTime; //강의 시작 시간
     private Date endTime; //강의 종료 시간
     private String closeDay; //휴무일
+
+    public static ProductEntity dtoToEntity(ProductDto productDto,CategoryEntity categoryEntity) {
+        return ProductEntity.builder().
+                userId(productDto.userId).
+                categoryEntity(categoryEntity).
+                title(productDto.title).
+                description(productDto.description).
+                location(productDto.location).
+                image(productDto.image).
+                like(productDto.like).
+                startTime(productDto.startTime).
+                endTime(productDto.endTime).
+                closeDay(productDto.closeDay).
+                build();
+    }
 }

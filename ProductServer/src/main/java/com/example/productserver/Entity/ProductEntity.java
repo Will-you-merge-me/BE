@@ -1,10 +1,18 @@
 package com.example.productserver.Entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Entity(name = "product")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
 public class ProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,5 +31,5 @@ public class ProductEntity {
 
     private Date startTime; //강의 시작 시간
     private Date endTime; //강의 종료 시간
-    private String rest; //휴무일
+    private String closeDay; //휴무일
 }
