@@ -28,4 +28,9 @@ public class CategoryDaoImpl implements CategoryDao{
     public CategoryEntity findBySmallCategory(String smallCategory) {
         return categoryRepository.findBySmallCategory(smallCategory);
     }
+
+    @Override
+    public CategoryEntity findByLargeCategory(String largeCategory) {
+        return categoryRepository.findByLargeCategory(largeCategory);
+    }
 }

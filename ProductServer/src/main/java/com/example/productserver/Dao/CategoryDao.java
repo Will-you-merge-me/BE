@@ -8,4 +8,6 @@ public interface CategoryDao {
     CategoryEntity createCategory(CategoryEntity categoryEntity);
 
     CategoryEntity findBySmallCategory(String smallCategory);
+
+    CategoryEntity findByLargeCategory(String largeCategory);
 }

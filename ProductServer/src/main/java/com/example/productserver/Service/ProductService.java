@@ -1,6 +1,7 @@
 package com.example.productserver.Service;
 
 import com.example.productserver.Dto.ProductDto;
+import com.example.productserver.Dto.ProductResponseDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,7 +11,7 @@ public interface ProductService {
 
     ProductDto createProduct(ProductDto productDto);
 
-    ProductDto readProduct(Long productId);
+    ProductResponseDto readProduct(Long productId);
 
     ProductDto updateProduct(ProductDto productDto);
 

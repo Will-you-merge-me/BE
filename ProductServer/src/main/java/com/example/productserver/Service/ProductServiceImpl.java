@@ -3,12 +3,14 @@ package com.example.productserver.Service;
 import com.example.productserver.Dao.CategoryDao;
 import com.example.productserver.Dao.ProductDao;
 import com.example.productserver.Dto.ProductDto;
+import com.example.productserver.Dto.ProductResponseDto;
 import com.example.productserver.Entity.CategoryEntity;
 import com.example.productserver.Entity.ProductEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService{
@@ -27,23 +29,31 @@ public class ProductServiceImpl implements ProductService{
     public ProductDto createProduct(ProductDto productDto) {
         CategoryEntity categoryEntity = categoryDao.findByCategoryId(productDto.getCategoryId());
         ProductEntity productEntity = ProductDto.dtoToEntity(productDto, categoryEntity);
-        productDao.createProduct(productEntity);
+        productEntity = productDao.createProduct(productEntity);
         return ProductDto.entityToDto(productEntity);
     }
 
     @Override
-    public ProductDto readProduct(Long productId) {
-        return null;
+    public ProductResponseDto readProduct(Long productId) {
+        ProductEntity productEntity = productDao.findById(productId);
+        //TODO : 유저네임 넣는 openfeign 필요
+        return ProductResponseDto.entityToDto(productEntity,"테스트케이스");
     }
 
     @Override
     public List<ProductDto> readAllByLargeCategory(String largeCategory) {
-        return List.of();
+        List<ProductEntity> list = productDao.findByLargeCategory(largeCategory);
+        return list.stream().
+                map(ProductDto::entityToDto).
+                collect(Collectors.toList());
     }
 
     @Override
     public List<ProductDto> readAllBySmallCategory(String smallCategory) {
-        return List.of();
+        List<ProductEntity> list = productDao.findBySmallCategory(smallCategory);
+        return list.stream().
+                map(ProductDto::entityToDto).
+                collect(Collectors.toList());
     }
 
     @Override
@@ -53,6 +63,7 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public void deleteProduct(Long productId) {
-
+        ProductEntity productEntity = productDao.findById(productId);
+        productDao.deleteProduct(productEntity);
     }
 }

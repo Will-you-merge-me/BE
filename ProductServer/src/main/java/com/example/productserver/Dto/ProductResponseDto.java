@@ -2,10 +2,12 @@ package com.example.productserver.Dto;
 
 import com.example.productserver.Entity.ProductEntity;
 import lombok.Builder;
+import lombok.Setter;
 
 import java.util.Date;
 
 @Builder
+@Setter
 public class ProductResponseDto {
     private Long productId;
     private String userName; //트레이너 이름
