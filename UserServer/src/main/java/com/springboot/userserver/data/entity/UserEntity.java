@@ -4,6 +4,9 @@ import com.springboot.userserver.data.entity.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,5 +29,6 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-
+    @OneToMany(mappedBy = "user")
+    private List<CertificationEntity> certificationEntities;
 }

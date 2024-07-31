@@ -7,7 +7,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-// userDto에 (signupDto, loginDto, trainerSignupDto) 추가할 것 나머진 알아서
 
 public class UserDto {
     @Getter @Setter

@@ -1,6 +1,7 @@
 package com.springboot.userserver.controller;
 
 import com.springboot.userserver.data.dto.TokenDto;
+import com.springboot.userserver.data.dto.TrainerSignupRequestDto;
 import com.springboot.userserver.data.dto.UserDto;
 import com.springboot.userserver.data.dto.UserResponseDto;
 import com.springboot.userserver.service.UserService;
@@ -8,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -28,6 +27,11 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createUser);
     }
 
+    @PostMapping("/signup/trainer")
+    public ResponseEntity<UserDto.SignupDto> signUpTrainer(@RequestBody TrainerSignupRequestDto trainerDto) {
+        UserDto.SignupDto createTrainer = userService.signupTrainer(trainerDto.getUser(), trainerDto.getDocuments());
+        return ResponseEntity.status(HttpStatus.CREATED).body(createTrainer);
+    }
     @PostMapping("/signin")
     public ResponseEntity<TokenDto> signIn(@RequestBody UserDto.LoginDto loginDto) {
         TokenDto tokenDto = userService.loginUser(loginDto);

@@ -1,10 +1,13 @@
 package com.springboot.userserver.service.impl;
 
 import com.springboot.userserver.Config.JwtTokenProvider;
+import com.springboot.userserver.data.dto.CertificationDto;
 import com.springboot.userserver.data.dto.TokenDto;
 import com.springboot.userserver.data.dto.UserDto;
 import com.springboot.userserver.data.dto.UserResponseDto;
+import com.springboot.userserver.data.entity.CertificationEntity;
 import com.springboot.userserver.data.entity.UserEntity;
+import com.springboot.userserver.data.repository.CertificationRepository;
 import com.springboot.userserver.data.repository.UserRepository;
 import com.springboot.userserver.service.UserService;
 import org.slf4j.Logger;
@@ -13,19 +16,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Service
 public class UserServiceImpl implements UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserRepository userRepository;
+    private final CertificationRepository certificationRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
+                           CertificationRepository certificationRepository,
                            JwtTokenProvider jwtTokenProvider,
                            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.certificationRepository = certificationRepository;
         this.jwtTokenProvider = jwtTokenProvider;
         this.passwordEncoder = passwordEncoder;
     }
@@ -53,6 +62,22 @@ public class UserServiceImpl implements UserService {
         return UserDto.SignupDto.entityToDto(userEntity);
     }
 
+    @Override
+    public UserDto.SignupDto signupTrainer(UserDto.SignupDto trainerDto, List<CertificationDto> certificationDto) {
+        validateDuplicateEmail(trainerDto.getUid());
+        validateDuplicateNickname(trainerDto.getNickname());
+
+        UserEntity userEntity = UserDto.SignupDto.dtoToEntity(trainerDto);
+        UserEntity savedUserEntity = userRepository.save(userEntity);
+
+        List<CertificationEntity> certificationEntities = certificationDto.stream()
+                .map(document -> CertificationDto.dtoToEntity(document, savedUserEntity))
+                .collect(Collectors.toList());
+
+        certificationRepository.saveAll(certificationEntities);
+
+        return UserDto.SignupDto.entityToDto(savedUserEntity);
+    }
     @Override
     public TokenDto loginUser(UserDto.LoginDto loginDto) {
         UserEntity userEntity = userRepository.getByUid(loginDto.getUid())
