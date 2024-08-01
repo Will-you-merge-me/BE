@@ -2,6 +2,7 @@ package com.springboot.scg.component;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,15 +18,21 @@ import reactor.core.publisher.Mono;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
+import java.util.Base64;
 
 @Component
 public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<AuthorizationHeaderFilter.Config> {
     @Value("${secret.jwt.token.key}")
-    private String secretkey;
-    byte[] secretBytes = secretkey.getBytes();
-    Key key = new SecretKeySpec(secretBytes, SignatureAlgorithm.HS256.getJcaName());
+    String secretkey;
+
 
     private static final Logger logger = LoggerFactory.getLogger(AuthorizationHeaderFilter.class);
+
+    @PostConstruct
+    protected void init(){
+        logger.info("JwtTokenProvider : 초기화를 완료했습니다.(init)");
+        secretkey = Base64.getEncoder().encodeToString(secretkey.getBytes());
+    }
 
     public AuthorizationHeaderFilter() {
         super(Config.class);
@@ -64,7 +71,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 
         try {
             subject = Jwts.parserBuilder()
-                    .setSigningKey(key)
+                    .setSigningKey(secretkey)
                     .build()
                     .parseClaimsJws(jwt)
                     .getBody()
