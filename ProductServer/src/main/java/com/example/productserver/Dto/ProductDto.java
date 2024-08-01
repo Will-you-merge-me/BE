@@ -18,21 +18,21 @@ public class ProductDto {
     private String description; //상품 내용
     private String location; //강의 장소
     private String image; //상품 사진
-    private Long like; //상품 좋아요
+    private Long productLike; //상품 좋아요
 
     private Date startTime; //강의 시작 시간
     private Date endTime; //강의 종료 시간
     private String closeDay; //휴무일
 
-    public static ProductEntity dtoToEntity(ProductDto productDto,CategoryEntity categoryEntity) {
+    public static ProductEntity dtoToEntity(ProductDto productDto,CategoryEntity categoryEntity, String uploadUrl) {
         return ProductEntity.builder().
                 userId(productDto.userId).
                 categoryEntity(categoryEntity).
                 title(productDto.title).
                 description(productDto.description).
                 location(productDto.location).
-                image(productDto.image).
-                like(productDto.like).
+                image(uploadUrl).
+                productLike(productDto.productLike).
                 startTime(productDto.startTime).
                 endTime(productDto.endTime).
                 closeDay(productDto.closeDay).
@@ -47,7 +47,7 @@ public class ProductDto {
                 .description(productEntity.getDescription())
                 .location(productEntity.getLocation())
                 .image(productEntity.getImage())
-                .like(productEntity.getLike())
+                .productLike(productEntity.getProductLike())
                 .startTime(productEntity.getStartTime())
                 .endTime(productEntity.getEndTime())
                 .closeDay(productEntity.getCloseDay())

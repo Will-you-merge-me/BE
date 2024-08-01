@@ -8,7 +8,10 @@ import com.example.productserver.Entity.CategoryEntity;
 import com.example.productserver.Entity.ProductEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,21 +20,36 @@ public class ProductServiceImpl implements ProductService{
 
     private final ProductDao productDao;
     private final CategoryDao categoryDao;
-
+    private final S3UploadUtil s3UploadUtil;
 
     public ProductServiceImpl(@Autowired ProductDao productDao,
-                              CategoryDao categoryDao) {
+                              CategoryDao categoryDao,
+                              S3UploadUtil s3UploadUtil) {
         this.productDao = productDao;
         this.categoryDao = categoryDao;
+        this.s3UploadUtil = s3UploadUtil;
     }
 
     @Override
-    public ProductDto createProduct(ProductDto productDto) {
+    public ProductDto createProduct(ProductDto productDto, MultipartFile image) throws IOException {
         CategoryEntity categoryEntity = categoryDao.findByCategoryId(productDto.getCategoryId());
-        ProductEntity productEntity = ProductDto.dtoToEntity(productDto, categoryEntity);
+
+        String uploadUrl = null;
+
+        if(!image.isEmpty()){
+            File uploadFile = s3UploadUtil.convert(image) // MultipartFile 을 File 로 전환
+                    .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File Convert Fail"));
+
+            String PRODUCT_IMG_DIR = "product/";
+            uploadUrl = s3UploadUtil.upload(uploadFile, PRODUCT_IMG_DIR);
+        }
+
+        ProductEntity productEntity = ProductDto.dtoToEntity(productDto, categoryEntity, uploadUrl);
         productEntity = productDao.createProduct(productEntity);
         return ProductDto.entityToDto(productEntity);
     }
+
+
 
     @Override
     public ProductResponseDto readProduct(Long productId) {
