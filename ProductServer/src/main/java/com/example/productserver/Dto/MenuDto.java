@@ -15,9 +15,25 @@ public class MenuDto {
     private String image; //사진
     private long hour; //강의 시간
 
-    public static MenuEntity dtoToEntity(MenuDto menuDto) {
-        return MenuEntity.builder()
-                .
+    public static MenuEntity dtoToEntity(MenuDto menuDto, ProductEntity productEntity) {
+        return MenuEntity.builder().
+                productEntity(productEntity).
+                title(menuDto.title).
+                content(menuDto.content).
+                price(menuDto.price).
+                image(menuDto.image).
+                hour(menuDto.hour).
+                build();
+    }
+
+    public static MenuDto entityToDto(MenuEntity menuEntity) {
+        return MenuDto.builder().
+                productId(menuEntity.getProductEntity().getId()).
+                title(menuEntity.getTitle()).
+                content(menuEntity.getContent()).
+                price(menuEntity.getPrice()).
+                image(menuEntity.getImage()).
+                hour(menuEntity.getHour()).
                 build();
     }
 }

@@ -46,9 +46,10 @@ public class ProductController {
         return ResponseEntity.ok().body(productDtoList);
     }
 
-    @PatchMapping("/update") //상품 수정
-    public ResponseEntity<ProductDto> updateProduct(@RequestBody ProductDto productDto) {
-        ProductDto update = productService.updateProduct(productDto);
+    @PatchMapping("/update/{productId}") //상품 수정
+    public ResponseEntity<ProductDto> updateProduct(@PathVariable Long productId,
+                                                    @RequestBody ProductDto productDto) {
+        ProductDto update = productService.updateProduct(productId, productDto);
         return ResponseEntity.ok().body(update);
     }
 
