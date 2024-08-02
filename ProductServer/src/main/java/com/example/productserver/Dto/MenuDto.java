@@ -3,8 +3,10 @@ package com.example.productserver.Dto;
 import com.example.productserver.Entity.MenuEntity;
 import com.example.productserver.Entity.ProductEntity;
 import lombok.Builder;
+import lombok.Getter;
 
 @Builder
+@Getter
 public class MenuDto {
 
     private Long productId;
@@ -15,13 +17,13 @@ public class MenuDto {
     private String image; //사진
     private long hour; //강의 시간
 
-    public static MenuEntity dtoToEntity(MenuDto menuDto, ProductEntity productEntity) {
+    public static MenuEntity dtoToEntity(MenuDto menuDto, ProductEntity productEntity, String uploadUrl) {
         return MenuEntity.builder().
                 productEntity(productEntity).
                 title(menuDto.title).
                 content(menuDto.content).
                 price(menuDto.price).
-                image(menuDto.image).
+                image(uploadUrl).
                 hour(menuDto.hour).
                 build();
     }

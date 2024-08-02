@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -21,7 +22,7 @@ public class MenuController {
 
     @PostMapping("/create")
     public ResponseEntity<MenuDto> createMenu(@RequestBody MenuDto menuDto,
-                                              @RequestPart(value = "image", required = false) MultipartFile image) {
+                                              @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
         MenuDto create = menuService.createMenu(menuDto, image);
         return ResponseEntity.ok().body(create);
     }
