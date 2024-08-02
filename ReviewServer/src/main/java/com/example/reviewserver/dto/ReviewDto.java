@@ -1,31 +1,42 @@
 package com.example.reviewserver.dto;
 
 import com.example.reviewserver.entity.Review;
-import com.example.reviewserver.entity.ReviewKindOf;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Getter @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ReviewDto {
-    private Long id;
-    private Long userId;
-    private Long productId;
-    private String memo;
-    private Float star;
-    private String picture;
-    private ReviewKindOf reviewKindOf;
-    private LocalDate createdDate;
+    private Long userId;    // 유저 ID
+    private Long productId; // 상품 ID
+    private String memo;    // 내용
+    private Float star; // 별점
+    private String picture; // 사진
+    private LocalDate createdDate;  // 작성일
 
-    public ReviewDto(Review review) {
-        this.id = review.getId();
-        this.userId = review.getUserId();
-        this.productId = review.getProductId();
-        this.memo = review.getMemo();
-        this.star = review.getStar();
-        this.picture = review.getPicture();
-        this.reviewKindOf = review.getReviewKindOf();
-        this.createdDate = review.getCreatedDate();
+    public static Review dtoToEntity(ReviewDto reviewDto, String uploadUrl) {
+        return Review.builder()
+                .userId(reviewDto.getUserId())
+                .productId(reviewDto.getProductId())
+                .memo(reviewDto.getMemo())
+                .star(reviewDto.getStar())
+                .picture(uploadUrl)
+                .createdDate(reviewDto.getCreatedDate())
+                .build();
     }
+
+    public static ReviewDto entityToDto(Review review) {
+        return ReviewDto.builder()
+                .userId(review.getUserId())
+                .productId(review.getProductId())
+                .memo(review.getMemo())
+                .star(review.getStar())
+                .picture(review.getPicture())
+                .createdDate(review.getCreatedDate())
+                .build();
+    }
+
 }

@@ -1,54 +1,75 @@
 package com.example.reviewserver.service;
 
-import com.example.reviewserver.dao.ReviewDaoImpl;
+import com.example.reviewserver.dto.ReviewDto;
 import com.example.reviewserver.entity.Review;
 import com.example.reviewserver.repository.ReviewRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ReviewServiceImpl implements ReviewService{
 
-    private final ReviewDaoImpl reviewDao;
     private final ReviewRepository reviewRepository;
+    private final S3UploadUtil s3UploadUtil;
+
+    public ReviewServiceImpl(@Autowired ReviewRepository reviewRepository,
+                             S3UploadUtil s3UploadUtil) {
+        this.reviewRepository = reviewRepository;
+        this.s3UploadUtil = s3UploadUtil;
+    }
 
     @Override
     @Transactional
-    public Long save(Review review) {
-        return reviewDao.save(review);
+    public ReviewDto save(ReviewDto reviewDto, MultipartFile image) throws IOException {
+
+        String uploadUrl = null;
+
+        if(!image.isEmpty()) {
+            File uploadFile = s3UploadUtil.convert(image)
+                    .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File Converter Fail"));
+
+            String REVIEW_IMG_DIR = "review/";
+            uploadUrl = s3UploadUtil.upload(uploadFile, REVIEW_IMG_DIR);
+
+        }
+
+        Review review = ReviewDto.dtoToEntity(reviewDto, uploadUrl);
+        reviewRepository.save(review);
+
+        return ReviewDto.entityToDto(review);
     }
 
     @Override
-    public List<Review> findAll() {
-        return reviewRepository.findAll();
-    }
-
-    @Override
-    public Review findById(Long id) {
-        return reviewRepository.findById(id).get();
-    }
-
-    public void delete(Long findId) {
-        reviewDao.delete(findId);
+    public void deleteReview(Long reviewId) {
+        Review review = reviewRepository.findById(reviewId).get();
+        reviewRepository.delete(review);
     }
 
     /**
-     * 포토리뷰 조회
+     * 상품 리뷰 조회
      */
-    public List<Review> findPhotoReviews(Long productId){
-        return reviewRepository.findAllByProductIdAndPictureIsNotNull(productId);
+    public List<ReviewDto> findProductReviews(Long productId){
+        List<Review> reviews = reviewRepository.findByProductId(productId);
+        return reviews.stream().
+                map(ReviewDto::entityToDto)
+                .collect(Collectors.toList());
     }
 
     /**
-     * 일반리뷰 조회
+     * 유저가 작성한 리뷰 조회
      */
-    public List<Review> findReviews(Long productId){
-        return reviewRepository.findAllByProductIdAndPictureIsNull(productId);
+    public List<ReviewDto> findUserReviews(Long userId){
+        List<Review> reviews = reviewRepository.findByUserId(userId);
+        return reviews.stream()
+                .map(ReviewDto::entityToDto)
+                .collect(Collectors.toList());
     }
 }

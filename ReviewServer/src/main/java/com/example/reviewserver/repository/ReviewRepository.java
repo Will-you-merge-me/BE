@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
-    List<Review> findAllByProductIdAndPictureIsNotNull(Long id);
-    List<Review> findAllByProductIdAndPictureIsNull(Long id);
+    List<Review> findByProductId(Long id);
+    List<Review> findByUserId(Long id);
 }

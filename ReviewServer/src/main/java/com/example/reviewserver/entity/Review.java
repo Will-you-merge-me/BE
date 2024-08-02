@@ -2,39 +2,31 @@ package com.example.reviewserver.entity;
 
 import com.example.reviewserver.dto.ReviewDto;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
+@Builder
 @Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Review {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Float star;
+    private Float star; // 별점
 
-    private String memo;
+    private String memo;    // 내용
 
-    private String picture;
+    private String picture; // 사진
 
-    private LocalDate createdDate;
+    private LocalDate createdDate;  // 작성일
 
-    @Enumerated(EnumType.STRING)
-    private ReviewKindOf reviewKindOf;
+    private Long userId;    // 유저 ID
 
-    private Long userId;
+    private Long productId; // 상품 ID
 
-    private Long productId;
-
-    public void setReview(ReviewDto reviewDto){
-        this.star = reviewDto.getStar();
-        this.picture = reviewDto.getPicture();
-        this.memo = reviewDto.getMemo();
-        this.createdDate = LocalDate.now();
-        this.userId = reviewDto.getUserId();
-        this.productId = reviewDto.getProductId();
-    }
 }

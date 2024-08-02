@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: review-server
+  profiles:
+    active: dev
+  config:
+    import: optional:configserver:http://43.203.195.178:9000
