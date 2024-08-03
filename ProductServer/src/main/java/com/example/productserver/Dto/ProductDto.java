@@ -11,6 +11,7 @@ import java.util.Date;
 @Builder
 @Getter
 public class ProductDto {
+    private Long productId;
     private Long userId;
     private Long categoryId;
 
@@ -41,6 +42,7 @@ public class ProductDto {
 
     public static ProductDto entityToDto(ProductEntity productEntity) {
         return ProductDto.builder()
+                .productId(productEntity.getId())
                 .userId(productEntity.getUserId())
                 .categoryId(productEntity.getCategoryEntity().getId())
                 .title(productEntity.getTitle())

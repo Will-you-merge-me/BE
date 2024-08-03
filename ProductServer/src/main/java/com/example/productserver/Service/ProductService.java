@@ -17,7 +17,7 @@ public interface ProductService {
 
     void deleteProduct(Long productId);
 
-    List<ProductDto> readAllByLargeCategory(String largeCategory);
+    List<ProductResponseDto> readAllByLargeCategory(String largeCategory);
 
-    List<ProductDto> readAllBySmallCategory(String smallCategory);
+    List<ProductResponseDto> readAllBySmallCategory(String smallCategory);
 }

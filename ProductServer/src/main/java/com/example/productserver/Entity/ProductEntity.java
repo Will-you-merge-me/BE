@@ -32,4 +32,10 @@ public class ProductEntity {
     private Date startTime; //강의 시작 시간
     private Date endTime; //강의 종료 시간
     private String closeDay; //휴무일
+
+    @PrePersist // 엔티티를 저장 또는 업데이트할 때 실행되는 메서드
+    public void prePersist() {
+        if (this.productLike == null)
+            this.productLike = 0L;
+    }
 }

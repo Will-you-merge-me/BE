@@ -34,18 +34,18 @@ public class ProductController {
     }
 
     @GetMapping("/large/{largeCategory}") //대분류 카테고리별 상품 전체보기
-    public ResponseEntity<List<ProductDto>> readAllByLargeCategory(@PathVariable("largeCategory") String largeCategory) {
-        List<ProductDto> productDtoList = productService.readAllByLargeCategory(largeCategory);
+    public ResponseEntity<List<ProductResponseDto>> readAllByLargeCategory(@PathVariable("largeCategory") String largeCategory) {
+        List<ProductResponseDto> productDtoList = productService.readAllByLargeCategory(largeCategory);
         return ResponseEntity.ok().body(productDtoList);
     }
 
     @GetMapping("/small/{smallCategory}") //소분류 카테고리별 상품 전체보기
-    public ResponseEntity<List<ProductDto>> readAllBySmallCategory(@PathVariable("smallCategory") String smallCategory) {
-        List<ProductDto> productDtoList = productService.readAllBySmallCategory(smallCategory);
+    public ResponseEntity<List<ProductResponseDto>> readAllBySmallCategory(@PathVariable("smallCategory") String smallCategory) {
+        List<ProductResponseDto> productDtoList = productService.readAllBySmallCategory(smallCategory);
         return ResponseEntity.ok().body(productDtoList);
     }
 
-    @PatchMapping("/update/{productId}") //상품 수정
+    @PatchMapping("/{productId}") //상품 수정
     public ResponseEntity<ProductDto> updateProduct(@PathVariable Long productId,
                                                     @RequestBody ProductDto productDto) {
         ProductDto update = productService.updateProduct(productId, productDto);

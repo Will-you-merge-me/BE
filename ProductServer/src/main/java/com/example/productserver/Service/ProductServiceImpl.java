@@ -52,19 +52,24 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public List<ProductDto> readAllByLargeCategory(String largeCategory) {
+    public List<ProductResponseDto> readAllByLargeCategory(String largeCategory) {
         List<ProductEntity> list = productDao.findByLargeCategory(largeCategory);
-        return list.stream().
-                map(ProductDto::entityToDto).
-                collect(Collectors.toList());
+        return list.stream()
+                .map(productEntity -> {
+                    return ProductResponseDto.entityToDto(productEntity, "태스트케이스");
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<ProductDto> readAllBySmallCategory(String smallCategory) {
+    public List<ProductResponseDto> readAllBySmallCategory(String smallCategory) {
         List<ProductEntity> list = productDao.findBySmallCategory(smallCategory);
-        return list.stream().
-                map(ProductDto::entityToDto).
-                collect(Collectors.toList());
+        return list.stream()
+                .map(productEntity -> {
+                    //String username = userServiceClient.getUsername(productEntity.getUserId());
+                    return ProductResponseDto.entityToDto(productEntity, "테스트케이스");
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
