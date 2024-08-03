@@ -20,7 +20,7 @@ public class MenuController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<MenuDto> createMenu(@RequestBody MenuDto menuDto,
+    public ResponseEntity<MenuDto> createMenu(@RequestPart(value = "menuDto") MenuDto menuDto,
                                               @RequestPart(value = "image", required = false) MultipartFile image) {
         MenuDto create = menuService.createMenu(menuDto, image);
         return ResponseEntity.ok().body(create);
@@ -38,14 +38,14 @@ public class MenuController {
         return ResponseEntity.ok().body(menuDto);
     }
 
-    @PatchMapping("/update/{menuId}")
+    @PatchMapping("/{menuId}")
     public ResponseEntity<MenuDto> updateMenu(@PathVariable Long menuId,
                                               @RequestBody MenuDto menuDto){
         MenuDto update = menuService.updateMenu(menuId, menuDto);
         return ResponseEntity.ok().body(update);
     }
 
-    @DeleteMapping("/delete/{menuId}")
+    @DeleteMapping("/{menuId}")
     public void deleteMenu(@PathVariable Long menuId){
         menuService.deleteMenu(menuId);
     }

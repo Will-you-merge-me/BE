@@ -13,9 +13,9 @@ public class MenuDto {
 
     private String title; //이름
     private String content; //내용
-    private long price; //가격
+    private Long price; //가격
     private String image; //사진
-    private long hour; //강의 시간
+    private Long hour; //강의 시간
 
     public static MenuEntity dtoToEntity(MenuDto menuDto, ProductEntity productEntity, String uploadUrl) {
         return MenuEntity.builder().
