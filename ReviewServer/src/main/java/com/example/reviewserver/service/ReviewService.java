@@ -9,8 +9,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ReviewService {
-    ReviewDto save(ReviewDto reviewDto, MultipartFile image) throws IOException;
+    ReviewDto save(ReviewDto reviewDto) throws IOException;
     List<ReviewDto> findProductReviews(Long productId);
     List<ReviewDto> findUserReviews(Long userId);
+    ReviewDto updateReview(Long reviewId, ReviewDto reviewDto);
     void deleteReview(Long reviewId);
 }

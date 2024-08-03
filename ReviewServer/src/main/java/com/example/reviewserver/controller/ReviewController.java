@@ -30,8 +30,8 @@ public class ReviewController {
      *리뷰 생성
      */
     @PostMapping("/create")
-    public ResponseEntity<ReviewDto> createReview(@RequestBody ReviewDto reviewDto, @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
-        ReviewDto reviewDto1 = reviewService.save(reviewDto, image);
+    public ResponseEntity<ReviewDto> createReview(@RequestBody ReviewDto reviewDto) throws IOException {
+        ReviewDto reviewDto1 = reviewService.save(reviewDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewDto1);
     }
 
@@ -47,7 +47,7 @@ public class ReviewController {
     /**
      * 상품 리뷰 조회
      */
-    @GetMapping("/review/product/{productId}")
+    @GetMapping("/product/{productId}")
     public ResponseEntity<List<ReviewDto>> readReviewProduct(@PathVariable("productId") Long productId){
         List<ReviewDto> reviews = reviewService.findProductReviews(productId);
         return ResponseEntity.ok().body(reviews);
@@ -56,11 +56,16 @@ public class ReviewController {
     /**
      * 유저가 작성한 리뷰 조회
      */
-    @GetMapping("/review/user/{userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<List<ReviewDto>> readReviewUser(@PathVariable("userId") Long userId){
         List<ReviewDto> reviews = reviewService.findUserReviews(userId);
         return ResponseEntity.ok().body(reviews);
     }
 
-
+    @PatchMapping("/{reviewId}")
+    public ResponseEntity<ReviewDto> updateReview(@PathVariable("reviewId") Long reviewId,
+                                                  @RequestBody ReviewDto reviewDto) {
+        ReviewDto updateReview = reviewService.updateReview(reviewId, reviewDto);
+        return ResponseEntity.ok().body(updateReview);
+    }
 }

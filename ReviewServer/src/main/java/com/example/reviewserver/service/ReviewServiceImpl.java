@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,20 +29,20 @@ public class ReviewServiceImpl implements ReviewService{
 
     @Override
     @Transactional
-    public ReviewDto save(ReviewDto reviewDto, MultipartFile image) throws IOException {
+    public ReviewDto save(ReviewDto reviewDto) throws IOException {
 
-        String uploadUrl = null;
+//        String uploadUrl = null;
 
-        if(!image.isEmpty()) {
-            File uploadFile = s3UploadUtil.convert(image)
-                    .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File Converter Fail"));
+//        if(!image.isEmpty()) {
+//            File uploadFile = s3UploadUtil.convert(image)
+//                    .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File Converter Fail"));
+//
+//            String REVIEW_IMG_DIR = "review/";
+//            uploadUrl = s3UploadUtil.upload(uploadFile, REVIEW_IMG_DIR);
+//
+//        }
 
-            String REVIEW_IMG_DIR = "review/";
-            uploadUrl = s3UploadUtil.upload(uploadFile, REVIEW_IMG_DIR);
-
-        }
-
-        Review review = ReviewDto.dtoToEntity(reviewDto, uploadUrl);
+        Review review = ReviewDto.dtoToEntity(reviewDto);
         reviewRepository.save(review);
 
         return ReviewDto.entityToDto(review);
@@ -56,6 +57,7 @@ public class ReviewServiceImpl implements ReviewService{
     /**
      * 상품 리뷰 조회
      */
+    @Override
     public List<ReviewDto> findProductReviews(Long productId){
         List<Review> reviews = reviewRepository.findByProductId(productId);
         return reviews.stream().
@@ -66,10 +68,31 @@ public class ReviewServiceImpl implements ReviewService{
     /**
      * 유저가 작성한 리뷰 조회
      */
+    @Override
     public List<ReviewDto> findUserReviews(Long userId){
         List<Review> reviews = reviewRepository.findByUserId(userId);
         return reviews.stream()
                 .map(ReviewDto::entityToDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public ReviewDto updateReview(Long reviewId, ReviewDto reviewDto) {
+        Review review = reviewRepository.findById(reviewId).get();
+
+        if(reviewDto.getMemo() != null) {
+            review.setMemo(reviewDto.getMemo());
+        }
+        if(reviewDto.getStar() != null) {
+            review.setStar(reviewDto.getStar());
+        }
+        if(reviewDto.getPicture() != null) {
+            review.setPicture(reviewDto.getPicture());
+        }
+        review.setCreatedDate(LocalDate.now());
+
+        reviewRepository.save(review);
+
+        return ReviewDto.entityToDto(review);
     }
 }
