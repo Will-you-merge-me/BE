@@ -4,12 +4,12 @@ import com.example.productserver.Dto.ProductDto;
 import com.example.productserver.Dto.ProductResponseDto;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+
 import java.util.List;
 
 public interface ProductService {
 
-    ProductDto createProduct(ProductDto productDto, MultipartFile image) throws IOException;
+    ProductDto createProduct(ProductDto productDto, MultipartFile image);
 
     ProductResponseDto readProduct(Long productId);
 

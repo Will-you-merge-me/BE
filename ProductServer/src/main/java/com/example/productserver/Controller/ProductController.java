@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -22,8 +21,8 @@ public class ProductController {
     }
 
     @PostMapping("/create") //상품 등록
-    public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto,
-                                                    @RequestPart(value = "image", required = false)MultipartFile image) throws IOException {
+    public ResponseEntity<ProductDto> createProduct(@RequestPart(value = "productDto") ProductDto productDto,
+                                                    @RequestPart(value = "image", required = false)MultipartFile image){
         ProductDto create = productService.createProduct(productDto, image);
         return ResponseEntity.ok().body(create);
     }

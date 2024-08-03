@@ -9,8 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,20 +29,16 @@ public class MenuServiceImpl implements MenuService{
     }
 
     @Override
-    public MenuDto createMenu(MenuDto menuDto, MultipartFile image) throws IOException {
+    public MenuDto createMenu(MenuDto menuDto, MultipartFile image) {
 
         ProductEntity productEntity = productDao.findById(menuDto.getProductId());
-        String uploadUrl = null;
+        URL uploadUrl = null;
 
         if(!image.isEmpty()){
-            File uploadFile = s3UploadUtil.convert(image) // MultipartFile 을 File 로 전환
-                    .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File Convert Fail"));
-
-            String PRODUCT_IMG_DIR = "menu";
-            uploadUrl = s3UploadUtil.upload(uploadFile, PRODUCT_IMG_DIR);
+            String MENU_IMG_DIR = "menu";
+            uploadUrl = s3UploadUtil.fileUpload(image, MENU_IMG_DIR);
         }
-
-        MenuEntity menuEntity = MenuDto.dtoToEntity(menuDto,productEntity, uploadUrl);
+        MenuEntity menuEntity = MenuDto.dtoToEntity(menuDto,productEntity, String.valueOf(uploadUrl));
         menuEntity = menuDao.createProduct(menuEntity);
         return MenuDto.entityToDto(menuEntity);
     }

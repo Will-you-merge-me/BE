@@ -10,8 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,25 +30,19 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public ProductDto createProduct(ProductDto productDto, MultipartFile image) throws IOException {
+    public ProductDto createProduct(ProductDto productDto, MultipartFile image) {
         CategoryEntity categoryEntity = categoryDao.findByCategoryId(productDto.getCategoryId());
 
-        String uploadUrl = null;
+        URL uploadUrl = null;
 
         if(!image.isEmpty()){
-            File uploadFile = s3UploadUtil.convert(image) // MultipartFile 을 File 로 전환
-                    .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File Convert Fail"));
-
             String PRODUCT_IMG_DIR = "product/";
-            uploadUrl = s3UploadUtil.upload(uploadFile, PRODUCT_IMG_DIR);
+            uploadUrl = s3UploadUtil.fileUpload(image, PRODUCT_IMG_DIR);
         }
-
-        ProductEntity productEntity = ProductDto.dtoToEntity(productDto, categoryEntity, uploadUrl);
+        ProductEntity productEntity = ProductDto.dtoToEntity(productDto, categoryEntity, String.valueOf(uploadUrl));
         productEntity = productDao.createProduct(productEntity);
         return ProductDto.entityToDto(productEntity);
     }
-
-
 
     @Override
     public ProductResponseDto readProduct(Long productId) {
