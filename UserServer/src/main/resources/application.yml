@@ -1,7 +1,0 @@
-spring:
-  application:
-    name: user-server
-  profiles:
-    active: dev
-  config:
-    import: optional:configserver:http://43.203.195.178:9000
