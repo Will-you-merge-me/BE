@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @Setter
 public class ReviewResponseDto {
     private Long reviewId;
+    private Long productId;
     private String name;
     private String nickname;
     private String profileImage;
@@ -25,6 +26,7 @@ public class ReviewResponseDto {
     public static ReviewResponseDto entityToDto(Review review, UserFeignDto userFeignDto) {
         return ReviewResponseDto.builder()
                 .reviewId(review.getId())
+                .productId(review.getProductId())
                 .name(userFeignDto.getName())
                 .nickname(userFeignDto.getNickname())
                 .profileImage(userFeignDto.getProfileImage())
