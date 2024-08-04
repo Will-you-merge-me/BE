@@ -1,9 +1,7 @@
 package com.example.reviewserver.controller;
 
 import com.example.reviewserver.dto.ReviewDto;
-import com.example.reviewserver.entity.Review;
 import com.example.reviewserver.service.ReviewService;
-import com.example.reviewserver.service.ReviewServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
-
 
 @RestController
 @RequestMapping("/review")
@@ -30,7 +25,7 @@ public class ReviewController {
      *리뷰 생성
      */
     @PostMapping("/create")
-    public ResponseEntity<ReviewDto> createReview(@RequestBody ReviewDto reviewDto, @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
+    public ResponseEntity<ReviewDto> createReview(@RequestBody ReviewDto reviewDto, @RequestPart(value = "image", required = false) MultipartFile image){
         ReviewDto reviewDto1 = reviewService.save(reviewDto, image);
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewDto1);
     }
@@ -51,6 +46,12 @@ public class ReviewController {
     public ResponseEntity<List<ReviewDto>> readReviewProduct(@PathVariable("productId") Long productId){
         List<ReviewDto> reviews = reviewService.findProductReviews(productId);
         return ResponseEntity.ok().body(reviews);
+    }
+
+    @PatchMapping("/{reviewId}")
+    public ResponseEntity<ReviewDto> updateReview(@PathVariable Long reviewId, @RequestBody ReviewDto reviewDto){
+        ReviewDto update = reviewService.updateReview(reviewId, reviewDto);
+        return ResponseEntity.ok().body(update);
     }
 
     /**

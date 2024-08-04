@@ -1,11 +1,9 @@
 package com.example.reviewserver.entity;
 
-import com.example.reviewserver.dto.ReviewDto;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Builder
