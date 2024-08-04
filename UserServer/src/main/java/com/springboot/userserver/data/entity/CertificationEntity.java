@@ -15,7 +15,7 @@ public class CertificationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String document;
+    private String documentUrl;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

@@ -21,7 +21,7 @@ public class UserDto {
         private String address;
         private String imageURL;
         private String role;
-        public static UserEntity dtoToEntity(UserDto.SignupDto signupDto) {
+        public static UserEntity dtoToEntity(UserDto.SignupDto signupDto,String uploadUrl) {
             return UserEntity.builder()
                     .uid(signupDto.getUid())
                     .password(signupDto.getPassword())
@@ -29,7 +29,7 @@ public class UserDto {
                     .phone(signupDto.getPhone())
                     .nickname(signupDto.getNickname())
                     .address(signupDto.getAddress())
-                    .imageURL(signupDto.getImageURL())
+                    .imageURL(uploadUrl)
                     .role(Role.valueOf(signupDto.getRole()))
                     .build();
         }

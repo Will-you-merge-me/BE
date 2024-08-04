@@ -9,16 +9,16 @@ import com.springboot.userserver.data.entity.CertificationEntity;
 import com.springboot.userserver.data.entity.UserEntity;
 import com.springboot.userserver.data.repository.CertificationRepository;
 import com.springboot.userserver.data.repository.UserRepository;
+import com.springboot.userserver.service.S3UploadUtil;
 import com.springboot.userserver.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import java.net.URL;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -27,16 +27,19 @@ public class UserServiceImpl implements UserService {
     private final CertificationRepository certificationRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
+    private final S3UploadUtil s3UploadUtil;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            CertificationRepository certificationRepository,
                            JwtTokenProvider jwtTokenProvider,
-                           PasswordEncoder passwordEncoder) {
+                           PasswordEncoder passwordEncoder,
+                           S3UploadUtil s3UploadUtil) {
         this.userRepository = userRepository;
         this.certificationRepository = certificationRepository;
         this.jwtTokenProvider = jwtTokenProvider;
         this.passwordEncoder = passwordEncoder;
+        this.s3UploadUtil = s3UploadUtil;
     }
 
     public void validateDuplicateEmail(String uid) {
@@ -50,41 +53,57 @@ public class UserServiceImpl implements UserService {
         }
     }
     @Override
-    public UserDto.SignupDto signupUser(UserDto.SignupDto signupDto) {
+    public UserDto.SignupDto signupUser(UserDto.SignupDto signupDto, MultipartFile image) {
         validateDuplicateEmail(signupDto.getUid());
         validateDuplicateNickname(signupDto.getNickname());
 
         signupDto.setPassword(passwordEncoder.encode(signupDto.getPassword()));
 
-        UserEntity userEntity = UserDto.SignupDto.dtoToEntity(signupDto);
+        URL uploadUrl = null;
+        if(!image.isEmpty()){
+            String PRODUCT_IMG_DIR = "user/";
+            uploadUrl = s3UploadUtil.fileUpload(image, PRODUCT_IMG_DIR);
+        }
+
+        UserEntity userEntity = UserDto.SignupDto.dtoToEntity(signupDto, String.valueOf(uploadUrl));
         userRepository.save(userEntity);
 
         return UserDto.SignupDto.entityToDto(userEntity);
     }
 
     @Override
-    public UserDto.SignupDto signupTrainer(UserDto.SignupDto trainerDto, List<CertificationDto> certificationDto) {
+    public UserDto.SignupDto signupTrainer(UserDto.SignupDto trainerDto, MultipartFile profileImage, MultipartFile certification) {
         validateDuplicateEmail(trainerDto.getUid());
         validateDuplicateNickname(trainerDto.getNickname());
 
-        UserEntity userEntity = UserDto.SignupDto.dtoToEntity(trainerDto);
+        URL uploadUrl = null; //프로필 이미지 저장
+        if(!profileImage.isEmpty()){
+            String PRODUCT_IMG_DIR = "trainer/";
+            uploadUrl = s3UploadUtil.fileUpload(profileImage, PRODUCT_IMG_DIR);
+        }
+
+        UserEntity userEntity = UserDto.SignupDto.dtoToEntity(trainerDto, String.valueOf(uploadUrl));
         UserEntity savedUserEntity = userRepository.save(userEntity);
 
-        List<CertificationEntity> certificationEntities = certificationDto.stream()
-                .map(document -> CertificationDto.dtoToEntity(document, savedUserEntity))
-                .collect(Collectors.toList());
+        URL certificationUrl = null; //인증서류 저장
+        if(!certification.isEmpty()){
+            String PRODUCT_IMG_DIR = "certification/";
+            certificationUrl = s3UploadUtil.fileUpload(certification, PRODUCT_IMG_DIR);
+        }
 
-        certificationRepository.saveAll(certificationEntities);
+        CertificationEntity certificationEntity = CertificationDto.dtoToEntity(String.valueOf(certificationUrl), savedUserEntity);
+
+        certificationRepository.save(certificationEntity);
 
         return UserDto.SignupDto.entityToDto(savedUserEntity);
     }
     @Override
     public TokenDto loginUser(UserDto.LoginDto loginDto) {
         UserEntity userEntity = userRepository.getByUid(loginDto.getUid())
-                .orElseThrow(() -> new IllegalArgumentException("아이디(로그인 전화번호, 로그인 전용 아이디) 또는 비밀번호가 잘못 되었습니다. 아이디와 비밀번호를 정확히 입력해 주세요."));
+                .orElseThrow(() -> new IllegalArgumentException("회원정보가 일치하지 않습니다."));
 
         if(!passwordEncoder.matches(loginDto.getPassword(), userEntity.getPassword())) {
-            throw new IllegalArgumentException("아이디(로그인 전화번호, 로그인 전용 아이디) 또는 비밀번호가 잘못 되었습니다. 아이디와 비밀번호를 정확히 입력해 주세요.");
+            throw new IllegalArgumentException("회원정보가 일치하지 않습니다.");
         }
 
         TokenDto tokenDto = new TokenDto();
