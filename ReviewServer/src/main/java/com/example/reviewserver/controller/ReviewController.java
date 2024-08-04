@@ -1,6 +1,7 @@
 package com.example.reviewserver.controller;
 
 import com.example.reviewserver.dto.ReviewDto;
+import com.example.reviewserver.dto.ReviewResponseDto;
 import com.example.reviewserver.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -53,8 +54,8 @@ public class ReviewController {
      * 유저가 작성한 리뷰 조회
      */
     @GetMapping("/review/user/{userId}")
-    public ResponseEntity<List<ReviewDto>> readReviewUser(@PathVariable("userId") Long userId){
-        List<ReviewDto> reviews = reviewService.findUserReviews(userId);
+    public ResponseEntity<List<ReviewResponseDto>> readReviewUser(@PathVariable("userId") Long userId){
+        List<ReviewResponseDto> reviews = reviewService.findUserReviews(userId);
         return ResponseEntity.ok().body(reviews);
     }
 

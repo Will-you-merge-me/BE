@@ -1,6 +1,7 @@
 package com.example.reviewserver.service;
 
 import com.example.reviewserver.dto.ReviewDto;
+import com.example.reviewserver.dto.ReviewResponseDto;
 import com.example.reviewserver.entity.Review;
 import com.example.reviewserver.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +20,14 @@ public class ReviewServiceImpl implements ReviewService{
 
     private final ReviewRepository reviewRepository;
     private final S3UploadUtil s3UploadUtil;
+    private final UserFeignClient userFeignClient;
 
     public ReviewServiceImpl(@Autowired ReviewRepository reviewRepository,
-                             S3UploadUtil s3UploadUtil) {
+                             S3UploadUtil s3UploadUtil,
+                             UserFeignClient userFeignClient) {
         this.reviewRepository = reviewRepository;
         this.s3UploadUtil = s3UploadUtil;
+        this.userFeignClient = userFeignClient;
     }
 
     @Override
@@ -76,10 +80,10 @@ public class ReviewServiceImpl implements ReviewService{
     /**
      * 유저가 작성한 리뷰 조회
      */
-    public List<ReviewDto> findUserReviews(Long userId){
+    public List<ReviewResponseDto> findUserReviews(Long userId){
         List<Review> reviews = reviewRepository.findByUserId(userId);
         return reviews.stream()
-                .map(ReviewDto::entityToDto)
+                .map(review -> ReviewResponseDto.entityToDto(review, userFeignClient.findById(review.getUserId())))
                 .collect(Collectors.toList());
     }
 }
