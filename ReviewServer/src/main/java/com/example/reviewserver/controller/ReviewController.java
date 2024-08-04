@@ -44,7 +44,7 @@ public class ReviewController {
     /**
      * 상품 리뷰 조회
      */
-    @GetMapping("/review/product/{productId}")
+    @GetMapping("/product/{productId}")
     public ResponseEntity<List<ReviewDto>> readReviewProduct(@PathVariable("productId") Long productId){
         List<ReviewDto> reviews = reviewService.findProductReviews(productId);
         return ResponseEntity.ok().body(reviews);
@@ -53,7 +53,7 @@ public class ReviewController {
     /**
      * 유저가 작성한 리뷰 조회
      */
-    @GetMapping("/review/user/{userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<List<ReviewResponseDto>> readReviewUser(@PathVariable("userId") Long userId){
         List<ReviewResponseDto> reviews = reviewService.findUserReviews(userId);
         return ResponseEntity.ok().body(reviews);
