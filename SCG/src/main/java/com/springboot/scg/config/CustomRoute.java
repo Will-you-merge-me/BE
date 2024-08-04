@@ -24,15 +24,16 @@ public class CustomRoute {
                         .uri("lb://user-server"))
                 .route("user-server", r -> r.path("/user/signin")
                         .uri("lb://user-server"))
-                .route("auth-server", r -> r.path("/auth/**")
+                .route("user-server", r -> r.path("/user/**")
                         .filters(f -> f.filter(jwtFilter.apply(new AuthorizationHeaderFilter.Config())))
                         .uri("lb://auth-server"))
-                .route("ms2", r -> r.path("/product/**")
-                        .uri("http://localhost:8082"))
-                .route("ms3", r -> r.path("/review/**")
-                        .uri("http://localhost:8083"))
-                .route("ms4", r -> r.path("/orders/**")
-                        .uri("http://localhost:8084"))
+
+                .route("product-server", r -> r.path("/product/**")
+                        .uri("lb://product-server"))
+
+                .route("review-server", r -> r.path("/review/**")
+                        .uri("lb://review-server"))
+
                 .build();
     }
 }
