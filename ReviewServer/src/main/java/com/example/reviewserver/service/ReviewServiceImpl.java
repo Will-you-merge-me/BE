@@ -64,7 +64,7 @@ public class ReviewServiceImpl implements ReviewService{
     }
 
     /**
-     * 상품 리뷰 조회
+     * 상품 리뷰 조회d
      */
     public List<ReviewDto> findProductReviews(Long productId){
         List<Review> reviews = reviewRepository.findByProductId(productId);
