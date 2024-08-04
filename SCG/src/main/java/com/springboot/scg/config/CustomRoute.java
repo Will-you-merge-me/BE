@@ -26,7 +26,7 @@ public class CustomRoute {
                         .uri("lb://user-server"))
                 .route("user-server", r -> r.path("/user/**")
                         .filters(f -> f.filter(jwtFilter.apply(new AuthorizationHeaderFilter.Config())))
-                        .uri("lb://auth-server"))
+                        .uri("lb://user-server"))
 
                 .route("product-server", r -> r.path("/product/**")
                         .uri("lb://product-server"))
