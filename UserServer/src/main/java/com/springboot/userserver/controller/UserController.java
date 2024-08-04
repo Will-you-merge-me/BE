@@ -1,10 +1,9 @@
 package com.springboot.userserver.controller;
 
-import com.springboot.userserver.data.dto.TokenDto;
-import com.springboot.userserver.data.dto.TrainerSignupRequestDto;
-import com.springboot.userserver.data.dto.UserDto;
-import com.springboot.userserver.data.dto.UserResponseDto;
+import com.springboot.userserver.data.dto.*;
 import com.springboot.userserver.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/user")
 public class UserController {
 
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
 
     @Autowired
@@ -59,5 +59,13 @@ public class UserController {
     @DeleteMapping("/delete/{userId}")  // 유저 삭제
     public void deleteUser(@PathVariable("userId") String userId) {
         userService.deleteUser(userId);
+    }
+
+    //이 밑으로 Feign
+
+    @GetMapping("/feign/{userId}")
+    public UserFeignDto findById(@PathVariable("userId") Long userId) {
+        log.info("User Feign 호출");
+        return userService.findById(userId);
     }
 }

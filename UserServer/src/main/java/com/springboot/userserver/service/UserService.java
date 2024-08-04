@@ -2,6 +2,7 @@ package com.springboot.userserver.service;
 
 import com.springboot.userserver.data.dto.TokenDto;
 import com.springboot.userserver.data.dto.UserDto;
+import com.springboot.userserver.data.dto.UserFeignDto;
 import com.springboot.userserver.data.dto.UserResponseDto;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,4 +16,6 @@ public interface UserService {
     TokenDto updateUser(String uid, UserDto.SignupDto userDto);
 
     void deleteUser(String userId);
+
+    UserFeignDto findById(Long userId);
 }

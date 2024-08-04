@@ -1,10 +1,7 @@
 package com.springboot.userserver.service.impl;
 
 import com.springboot.userserver.Config.JwtTokenProvider;
-import com.springboot.userserver.data.dto.CertificationDto;
-import com.springboot.userserver.data.dto.TokenDto;
-import com.springboot.userserver.data.dto.UserDto;
-import com.springboot.userserver.data.dto.UserResponseDto;
+import com.springboot.userserver.data.dto.*;
 import com.springboot.userserver.data.entity.CertificationEntity;
 import com.springboot.userserver.data.entity.UserEntity;
 import com.springboot.userserver.data.repository.CertificationRepository;
@@ -157,5 +154,12 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new IllegalArgumentException("대상 회원이 존재하지 않습니다."));
 
         userRepository.delete(userEntity);
+    }
+
+    @Override
+    public UserFeignDto findById(Long userId) {
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
+        return UserFeignDto.entityToDto(userEntity);
     }
 }
