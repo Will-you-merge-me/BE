@@ -18,13 +18,13 @@ public class ReviewDto {
     private String picture; // 사진
     private LocalDate createdDate;  // 작성일
 
-    public static Review dtoToEntity(ReviewDto reviewDto) {
+    public static Review dtoToEntity(ReviewDto reviewDto, String uploadUrl) {
         return Review.builder()
                 .userId(reviewDto.getUserId())
                 .productId(reviewDto.getProductId())
                 .memo(reviewDto.getMemo())
                 .star(reviewDto.getStar())
-                .picture(reviewDto.getPicture())
+                .picture(uploadUrl)
                 .createdDate(reviewDto.getCreatedDate())
                 .build();
     }

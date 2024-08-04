@@ -25,7 +25,7 @@ public class S3UploadUtil {
     public S3UploadUtil(@Autowired AmazonS3 amazonS3) {
         this.amazonS3 = amazonS3;
     }
-    public URL fileUpload(MultipartFile multipartFile, String dirname){
+    public URL fileUpload(MultipartFile multipartFile,String dirname){
         String fileName = makeFileName(multipartFile,dirname);
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(multipartFile.getContentType());

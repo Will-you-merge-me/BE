@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+import java.net.URL;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,20 +28,15 @@ public class ReviewServiceImpl implements ReviewService{
 
     @Override
     @Transactional
-    public ReviewDto save(ReviewDto reviewDto, MultipartFile image) throws IOException {
+    public ReviewDto save(ReviewDto reviewDto, MultipartFile image){
 
-        String uploadUrl = null;
-
-        if(!image.isEmpty()) {
-            File uploadFile = s3UploadUtil.convert(image)
-                    .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File Converter Fail"));
-
+        URL uploadUrl = null;
+        if(!image.isEmpty()){
             String REVIEW_IMG_DIR = "review/";
-            uploadUrl = s3UploadUtil.upload(uploadFile, REVIEW_IMG_DIR);
-
+            uploadUrl = s3UploadUtil.fileUpload(image, REVIEW_IMG_DIR);
         }
 
-        Review review = ReviewDto.dtoToEntity(reviewDto, uploadUrl);
+        Review review = ReviewDto.dtoToEntity(reviewDto, String.valueOf(uploadUrl));
         reviewRepository.save(review);
 
         return ReviewDto.entityToDto(review);
@@ -49,8 +44,23 @@ public class ReviewServiceImpl implements ReviewService{
 
     @Override
     public void deleteReview(Long reviewId) {
-        Review review = reviewRepository.findById(reviewId).get();
+        Review review = reviewRepository.findById(reviewId)
+                        .orElseThrow(() -> new IllegalArgumentException("Review not found"));
         reviewRepository.delete(review);
+    }
+
+    @Override //추후 수정 필요. 간단하게 구현함
+    public ReviewDto updateReview(Long reviewId, ReviewDto reviewDto) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("Review not found"));
+        if(reviewDto.getMemo() !=null)
+            review.setMemo(reviewDto.getMemo());
+        else if(reviewDto.getStar() !=null)
+            review.setStar(reviewDto.getStar());
+
+        review.setCreatedDate(LocalDate.now());
+        reviewRepository.save(review);
+        return ReviewDto.entityToDto(review);
     }
 
     /**
