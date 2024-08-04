@@ -4,6 +4,7 @@ import com.example.productserver.Dao.CategoryDao;
 import com.example.productserver.Dao.ProductDao;
 import com.example.productserver.Dto.ProductDto;
 import com.example.productserver.Dto.ProductResponseDto;
+import com.example.productserver.Dto.UserFeignDto;
 import com.example.productserver.Entity.CategoryEntity;
 import com.example.productserver.Entity.ProductEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +21,16 @@ public class ProductServiceImpl implements ProductService{
     private final ProductDao productDao;
     private final CategoryDao categoryDao;
     private final S3UploadUtil s3UploadUtil;
+    private final UserFeignClient userFeignClient;
 
     public ProductServiceImpl(@Autowired ProductDao productDao,
                               CategoryDao categoryDao,
-                              S3UploadUtil s3UploadUtil) {
+                              S3UploadUtil s3UploadUtil,
+                              UserFeignClient userFeignClient) {
         this.productDao = productDao;
         this.categoryDao = categoryDao;
         this.s3UploadUtil = s3UploadUtil;
+        this.userFeignClient = userFeignClient;
     }
 
     @Override
@@ -47,17 +51,15 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public ProductResponseDto readProduct(Long productId) {
         ProductEntity productEntity = productDao.findById(productId);
-        //TODO : 유저네임 넣는 openfeign 필요
-        return ProductResponseDto.entityToDto(productEntity,"테스트케이스");
+        UserFeignDto userFeignDto = userFeignClient.findById(productEntity.getUserId());
+        return ProductResponseDto.entityToDto(productEntity, userFeignDto);
     }
 
     @Override
     public List<ProductResponseDto> readAllByLargeCategory(String largeCategory) {
         List<ProductEntity> list = productDao.findByLargeCategory(largeCategory);
         return list.stream()
-                .map(productEntity -> {
-                    return ProductResponseDto.entityToDto(productEntity, "태스트케이스");
-                })
+                .map(productEntity -> ProductResponseDto.entityToDto(productEntity, userFeignClient.findById(productEntity.getUserId())))
                 .collect(Collectors.toList());
     }
 
@@ -65,10 +67,7 @@ public class ProductServiceImpl implements ProductService{
     public List<ProductResponseDto> readAllBySmallCategory(String smallCategory) {
         List<ProductEntity> list = productDao.findBySmallCategory(smallCategory);
         return list.stream()
-                .map(productEntity -> {
-                    //String username = userServiceClient.getUsername(productEntity.getUserId());
-                    return ProductResponseDto.entityToDto(productEntity, "테스트케이스");
-                })
+                .map(productEntity -> ProductResponseDto.entityToDto(productEntity, userFeignClient.findById(productEntity.getUserId())))
                 .collect(Collectors.toList());
     }
 

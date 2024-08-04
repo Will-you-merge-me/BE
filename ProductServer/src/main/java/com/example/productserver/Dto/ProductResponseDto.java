@@ -13,6 +13,8 @@ import java.util.Date;
 public class ProductResponseDto {
     private Long productId;
     private String userName; //트레이너 이름
+    private String profileImage; //트레이너 프로필 이미지
+    private String phoneNum; //트레이너 휴대폰 번호
     private String largeCategory; //대분류
     private String smallCategory; //소분류
 
@@ -26,10 +28,12 @@ public class ProductResponseDto {
     private Date endTime; //강의 종료 시간
     private String closeDay; //휴무일
 
-    public static ProductResponseDto entityToDto(ProductEntity productEntity, String username) {
+    public static ProductResponseDto entityToDto(ProductEntity productEntity, UserFeignDto userFeignDto) {
         return ProductResponseDto.builder().
                 productId(productEntity.getId()).
-                userName(username).
+                userName(userFeignDto.getName()).
+                profileImage(userFeignDto.getProfileImage()).
+                phoneNum(userFeignDto.getPhoneNum()).
                 largeCategory(productEntity.getCategoryEntity().getLargeCategory()).
                 smallCategory(productEntity.getCategoryEntity().getSmallCategory()).
                 title(productEntity.getTitle()).
