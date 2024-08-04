@@ -26,7 +26,7 @@ public class ReviewController {
      *리뷰 생성
      */
     @PostMapping("/create")
-    public ResponseEntity<ReviewDto> createReview(@RequestBody ReviewDto reviewDto,
+    public ResponseEntity<ReviewDto> createReview(@RequestPart(value = "reviewDto") ReviewDto reviewDto,
                                                   @RequestPart(value = "image", required = false) MultipartFile image){
         ReviewDto reviewDto1 = reviewService.save(reviewDto, image);
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewDto1);
