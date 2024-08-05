@@ -1,6 +1,7 @@
 package com.example.reviewserver.controller;
 
 import com.example.reviewserver.dto.ReviewDto;
+import com.example.reviewserver.dto.ReviewFeignDto;
 import com.example.reviewserver.dto.ReviewResponseDto;
 import com.example.reviewserver.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,4 +74,12 @@ public class ReviewController {
         return ResponseEntity.ok().body(update);
     }
 
+    /**
+     * 상품 평균 평점
+     */
+    @GetMapping("/feign/{productId}")
+    public ReviewFeignDto avgStarByProductId(@PathVariable Long productId) {
+        ReviewFeignDto reviewFeignDto = reviewService.avgStarByProductReview(productId);
+        return reviewService.avgStarByProductReview(productId);
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.reviewserver.service;
 
 import com.example.reviewserver.dto.ReviewDto;
+import com.example.reviewserver.dto.ReviewFeignDto;
 import com.example.reviewserver.dto.ReviewResponseDto;
 import com.example.reviewserver.entity.Review;
 import com.example.reviewserver.repository.ReviewRepository;
@@ -94,5 +95,12 @@ public class ReviewServiceImpl implements ReviewService{
         return reviews.stream()
                 .map(review -> ReviewResponseDto.entityToDto(review, userFeignClient.findById(review.getUserId())))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public ReviewFeignDto avgStarByProductReview(Long productId) {
+        Float avgScore = reviewRepository.findAverageRatingByProductId(productId);
+        return ReviewFeignDto.floatToDto(avgScore);
     }
 }

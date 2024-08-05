@@ -1,6 +1,7 @@
 package com.example.reviewserver.service;
 
 import com.example.reviewserver.dto.ReviewDto;
+import com.example.reviewserver.dto.ReviewFeignDto;
 import com.example.reviewserver.dto.ReviewResponseDto;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
@@ -13,4 +14,6 @@ public interface ReviewService {
     void deleteReview(Long reviewId);
 
     ReviewDto updateReview(Long reviewId, ReviewDto reviewDto);
+
+    ReviewFeignDto avgStarByProductReview(Long productId);
 }
