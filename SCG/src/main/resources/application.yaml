@@ -8,6 +8,7 @@ spring:
           '[/**]':
             allowedOrigins:
               - 'https://onna-lemon.vercel.app'
+              - 'http://localhost:5173'
             allow-credentials: true
             allowedHeaders: '*'
             allowedMethods:
