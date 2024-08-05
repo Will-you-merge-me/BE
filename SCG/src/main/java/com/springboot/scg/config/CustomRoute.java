@@ -33,6 +33,12 @@ public class CustomRoute {
                 .route("product-server", r -> r.path("/product/**")
                         .uri("lb://product-server"))
 
+                .route("product-server", r -> r.path("/menu/**")
+                        .uri("lb://product-server"))
+
+                .route("product-server", r -> r.path("/category/**")
+                        .uri("lb://product-server"))
+
                 .route("review-server", r -> r.path("/review/**")
                         .uri("lb://review-server"))
 
