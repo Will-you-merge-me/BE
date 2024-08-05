@@ -24,6 +24,7 @@ public class UserResponseDto {
                 .nickname(userEntity.getNickname())
                 .address(userEntity.getAddress())
                 .role(String.valueOf(userEntity.getRole()))
+                .imageURL(userEntity.getImageURL())
                 .build();
     }
 
@@ -34,6 +35,7 @@ public class UserResponseDto {
                 .nickname(userResponseDto.getNickname())
                 .address(userResponseDto.getAddress())
                 .role(Role.valueOf(userResponseDto.getRole()))
+                .imageURL(userResponseDto.getImageURL())
                 .build();
     }
 }
