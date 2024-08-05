@@ -52,6 +52,7 @@ public class UserServiceImpl implements UserService {
         }
     }
     @Override
+    @Transactional
     public UserDto.SignupDto signupUser(UserDto.SignupDto signupDto, MultipartFile image) {
         validateDuplicateEmail(signupDto.getUid());
         validateDuplicateNickname(signupDto.getNickname());
@@ -71,6 +72,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDto.SignupDto signupTrainer(UserDto.SignupDto trainerDto, MultipartFile profileImage, MultipartFile certification) {
         validateDuplicateEmail(trainerDto.getUid());
         validateDuplicateNickname(trainerDto.getNickname());
@@ -124,6 +126,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public TokenDto updateUser(String uid, UserDto.SignupDto userDto) {
         UserEntity userEntity = userRepository.findByUid(uid);
 
@@ -151,6 +154,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteUser(String userId) {
         UserEntity userEntity = userRepository.getByUid(userId)
                 .orElseThrow(() -> new IllegalArgumentException("대상 회원이 존재하지 않습니다."));
