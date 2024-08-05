@@ -45,6 +45,11 @@ public class ReviewServiceImpl implements ReviewService{
 
         return ReviewDto.entityToDto(review);
     }
+    @Override
+    public ReviewDto findReview(Long reviewId) {
+        Review review = reviewRepository.findById(reviewId).get();
+        return ReviewDto.entityToDto(review);
+    }
 
     @Override
     @Transactional

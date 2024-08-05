@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface ReviewService {
     ReviewDto save(ReviewDto reviewDto, MultipartFile image);
+    ReviewDto findReview(Long reviewId);
     List<ReviewDto> findProductReviews(Long productId);
     List<ReviewResponseDto> findUserReviews(Long userId);
     void deleteReview(Long reviewId);

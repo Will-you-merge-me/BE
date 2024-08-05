@@ -42,6 +42,14 @@ public class ReviewController {
     }
 
     /**
+     * 리뷰 단건 조회
+     */
+    @GetMapping("/{reviewId}")
+    public ResponseEntity<ReviewDto> readReview(@PathVariable("reviewId") Long reviewId) {
+        ReviewDto reviewDto = reviewService.findReview(reviewId);
+        return ResponseEntity.ok().body(reviewDto);
+    }
+    /**
      * 상품 리뷰 조회
      */
     @GetMapping("/product/{productId}")
