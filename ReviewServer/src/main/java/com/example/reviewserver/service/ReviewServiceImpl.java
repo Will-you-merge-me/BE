@@ -47,6 +47,7 @@ public class ReviewServiceImpl implements ReviewService{
     }
 
     @Override
+    @Transactional
     public void deleteReview(Long reviewId) {
         Review review = reviewRepository.findById(reviewId)
                         .orElseThrow(() -> new IllegalArgumentException("Review not found"));
@@ -54,12 +55,13 @@ public class ReviewServiceImpl implements ReviewService{
     }
 
     @Override //추후 수정 필요. 간단하게 구현함
+    @Transactional
     public ReviewDto updateReview(Long reviewId, ReviewDto reviewDto) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException("Review not found"));
         if(reviewDto.getMemo() !=null)
             review.setMemo(reviewDto.getMemo());
-        else if(reviewDto.getStar() !=null)
+        if(reviewDto.getStar() !=null)
             review.setStar(reviewDto.getStar());
 
         review.setCreatedDate(LocalDate.now());
