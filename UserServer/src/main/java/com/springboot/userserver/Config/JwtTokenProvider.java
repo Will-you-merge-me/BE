@@ -19,7 +19,7 @@ public class JwtTokenProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
 
-    @Value("${jwt.token.key}") //properties의 secret key를 가져온다.
+    @Value("${security.jwt.secret-key}") //properties의 secret key를 가져온다.
     private String secretkey;
 
     // secretkey를 Base64로 인코딩
