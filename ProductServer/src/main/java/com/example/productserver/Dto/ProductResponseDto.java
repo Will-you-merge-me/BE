@@ -23,12 +23,13 @@ public class ProductResponseDto {
     private String location; //강의 장소
     private String image; //상품 사진
     private Long productLike; //상품 좋아요
-
+    private Float reviewScore; //상품 평균 점수
+    private String my_description; //상품 소개
     private Date startTime; //강의 시작 시간
     private Date endTime; //강의 종료 시간
     private String closeDay; //휴무일
 
-    public static ProductResponseDto entityToDto(ProductEntity productEntity, UserFeignDto userFeignDto) {
+    public static ProductResponseDto entityToDto(ProductEntity productEntity, UserFeignDto userFeignDto, ReviewFeignDto reviewFeignDto) {
         return ProductResponseDto.builder().
                 productId(productEntity.getId()).
                 userName(userFeignDto.getName()).
@@ -41,6 +42,8 @@ public class ProductResponseDto {
                 location(productEntity.getLocation()).
                 image(productEntity.getImage()).
                 productLike(productEntity.getProductLike()).
+                reviewScore(reviewFeignDto.getReviewScore()).
+                my_description(productEntity.getMy_description()).
                 startTime(productEntity.getStartTime()).
                 endTime(productEntity.getEndTime()).
                 closeDay(productEntity.getCloseDay()).

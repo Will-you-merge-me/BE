@@ -20,6 +20,7 @@ public class ProductDto {
     private String location; //강의 장소
     private String image; //상품 사진
     private Long productLike; //상품 좋아요
+    private String my_description; //상품 소개
 
     private Date startTime; //강의 시작 시간
     private Date endTime; //강의 종료 시간
@@ -34,6 +35,7 @@ public class ProductDto {
                 location(productDto.location).
                 image(uploadUrl).
                 productLike(productDto.productLike).
+                my_description(productDto.my_description).
                 startTime(productDto.startTime).
                 endTime(productDto.endTime).
                 closeDay(productDto.closeDay).
@@ -50,6 +52,7 @@ public class ProductDto {
                 .location(productEntity.getLocation())
                 .image(productEntity.getImage())
                 .productLike(productEntity.getProductLike())
+                .my_description(productEntity.getMy_description())
                 .startTime(productEntity.getStartTime())
                 .endTime(productEntity.getEndTime())
                 .closeDay(productEntity.getCloseDay())
