@@ -77,6 +77,8 @@ public class UserServiceImpl implements UserService {
         validateDuplicateEmail(trainerDto.getUid());
         validateDuplicateNickname(trainerDto.getNickname());
 
+        trainerDto.setPassword(passwordEncoder.encode(trainerDto.getPassword()));
+
         URL uploadUrl = null; //프로필 이미지 저장
         if(!profileImage.isEmpty()){
             String PRODUCT_IMG_DIR = "trainer/";
