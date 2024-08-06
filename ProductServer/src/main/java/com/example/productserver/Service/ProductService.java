@@ -20,4 +20,6 @@ public interface ProductService {
     List<ProductResponseDto> readAllByLargeCategory(String largeCategory);
 
     List<ProductResponseDto> readAllBySmallCategory(String smallCategory);
+
+    List<ProductResponseDto> readAll();
 }

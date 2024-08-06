@@ -40,4 +40,9 @@ public class ProductDaoImpl implements ProductDao{
     public void deleteProduct(ProductEntity productEntity) {
         productRepository.delete(productEntity);
     }
+
+    @Override
+    public List<ProductEntity> findAll() {
+        return productRepository.findAll();
+    }
 }

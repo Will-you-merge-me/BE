@@ -14,4 +14,6 @@ public interface ProductDao {
     List<ProductEntity> findBySmallCategory(String smallCategory);
 
     void deleteProduct(ProductEntity productEntity);
+
+    List<ProductEntity> findAll();
 }

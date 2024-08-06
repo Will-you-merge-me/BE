@@ -39,6 +39,11 @@ public class ProductController {
         return ResponseEntity.ok().body(productDtoList);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<ProductResponseDto>> readAll() {
+        List<ProductResponseDto> productResponseDtos = productService.readAll();
+        return ResponseEntity.ok().body(productResponseDtos);
+    }
     @GetMapping("/small/{smallCategory}") //소분류 카테고리별 상품 전체보기
     public ResponseEntity<List<ProductResponseDto>> readAllBySmallCategory(@PathVariable("smallCategory") String smallCategory) {
         List<ProductResponseDto> productDtoList = productService.readAllBySmallCategory(smallCategory);

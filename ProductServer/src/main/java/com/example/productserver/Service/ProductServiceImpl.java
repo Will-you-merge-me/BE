@@ -78,6 +78,15 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
+    public List<ProductResponseDto> readAll() {
+        List<ProductEntity> list = productDao.findAll();
+        return list.stream()
+                .map(productEntity -> ProductResponseDto.entityToDto(productEntity, userFeignClient.findById(productEntity.getUserId()),
+                        reviewFeignClient.avgStarByProductId(productEntity.getId())))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public ProductDto updateProduct(Long productId, ProductDto productDto) {
         return null;
     }
