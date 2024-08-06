@@ -42,8 +42,8 @@ public class CustomRoute {
                 .route("review-server", r -> r.path("/review/**")
                         .uri("lb://review-server"))
 
-                .route("purchase-server", r-> r.path("/purchase/**")
-                        .uri("lb://purchase-server"))
+                .route("payment-server", r-> r.path("/payment/**")
+                        .uri("lb://payment-server"))
 
                 .build();
     }
