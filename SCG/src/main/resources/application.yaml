@@ -1,0 +1,27 @@
+spring:
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - 'https://onna-lemon.vercel.app'
+              - 'http://localhost:5173'
+            allow-credentials: true
+            allowedHeaders: '*'
+            allowedMethods:
+              - PUT
+              - GET
+              - POST
+              - DELETE
+              - PATCH
+              - OPTIONS
+
+  application:
+    name: scg
+  profiles:
+    active: dev
+  config:
+    import: optional:configserver:http://43.203.195.178:9000
