@@ -79,7 +79,6 @@ public class ReviewController {
      */
     @GetMapping("/feign/{productId}")
     public ReviewFeignDto avgStarByProductId(@PathVariable Long productId) {
-        ReviewFeignDto reviewFeignDto = reviewService.avgStarByProductReview(productId);
         return reviewService.avgStarByProductReview(productId);
     }
 }
