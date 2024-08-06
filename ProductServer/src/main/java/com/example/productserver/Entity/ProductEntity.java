@@ -1,0 +1,42 @@
+package com.example.productserver.Entity;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.util.Date;
+
+@Entity(name = "product")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+public class ProductEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id; // 상품 번호
+    private Long userId; //회원 번호
+
+    @ManyToOne
+    @JoinColumn(name = "categoryId")
+    private CategoryEntity categoryEntity;//카테고리 번호
+
+    private String title; //상품 제목
+    private String description; //상품 내용
+    private String location; //강의 장소
+    private String image; //상품 사진
+    private Long productLike; //상품 좋아요
+    private String my_description; //상품 소개
+
+    private Date startTime; //강의 시작 시간
+    private Date endTime; //강의 종료 시간
+    private String closeDay; //휴무일
+
+    @PrePersist // 엔티티를 저장 또는 업데이트할 때 실행되는 메서드
+    public void prePersist() {
+        if (this.productLike == null)
+            this.productLike = 0L;
+    }
+}
